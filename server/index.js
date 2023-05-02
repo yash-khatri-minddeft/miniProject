@@ -58,6 +58,23 @@ app.post('/add-product', expressjson, async (req, res) => {
     // new_product.save()
     // res.send('product addes')
 })
+app.post('/upload-image', expressjson, async (req, res) => {
+    const imageUpload = req.files.image;
+    imageUpload.mv(path.join(__dirname, '..', 'public', 'uploads', imageUpload.name))
+    const readFile = fs.createReadStream(path.join(__dirname, '..', 'public', 'uploads', imageUpload.name));
+    const options = {
+        pinataMetadata: {
+            name: imageUpload.name,
+        }
+    }
+    pinata.pinFileToIPFS(readFile, options).then((result) => {
+        console.log(result)
+        res.json({ response: 'https://ipfs.io/ipfs/' + result.IpfsHash })
+    }).catch((err) => {
+        console.log(err)
+        res.json({ response: 'image not uploaded' })
+    })
+})
 app.post('/get-product-by-id', expressjson, async (req, res) => {
     const productId = req.body.productId;
     const product = await Products.findOne({ product: productId, buyer: 'null' });
