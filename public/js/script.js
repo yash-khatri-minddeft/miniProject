@@ -1,5 +1,5 @@
 var provider, signer, account, walletConnected, chainId;
-const CONTRACT_ADDRESS = '0x958518beeA99131f64426C6223C778C368714FF3';
+const CONTRACT_ADDRESS = '0x1325EeF3724D718b893816F14c862dc55d40eDd7';
 const CONTRACT_ABI = [
 	{
 		"inputs": [
@@ -471,7 +471,7 @@ const CONTRACT_ABI = [
 		"type": "function"
 	}
 ];
-const TOKEN_ADDRESS = "0x5f4F0838698C7959686c99EC4717BbA598f93Fc0";
+const TOKEN_ADDRESS = "0x15D8e5835C356247b82c68D4810474bfb3aac7C6";
 const TOKEN_ABI = [
 	{
 		"inputs": [],
@@ -985,6 +985,8 @@ const addProducts = async () => {
 				const price = document.getElementById('price').value;
 				const description = document.getElementById('description').value;
 				const isToken = document.querySelector('input[name="isToken"]:checked').value;
+				console.log(parseInt(isToken))
+				// return false;
 				const location = document.getElementById('location').value;
 
 				const imageData = new FormData();
@@ -1005,7 +1007,7 @@ const addProducts = async () => {
 						}).then((res) => res.json())
 							.then(async (data) => {
 								console.log(data.next)
-								const tx = await LOLContract.addProduct(data.next, name, ethers.utils.parseEther(price.toString()), imageIPFSLink, description, location, isToken)
+								const tx = await LOLContract.addProduct(data.next, name, ethers.utils.parseEther(price.toString()), imageIPFSLink, description, location, parseInt(isToken))
 								await tx.wait(1)
 								const response = fetch('http://localhost:3000/add-product', {
 									method: 'post',
