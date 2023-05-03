@@ -1053,34 +1053,30 @@ async function makeOffer(event, isToken) {
 	const getAmount = event.target.querySelector('input').value;
 	const productId = event.target.getAttribute('data-product-id')
 	try {
-		fetch('/get-next-offer-count', {
-			method: 'GET'
-		}).then((res) => res.json())
-			.then(async (offer) => {
-				console.log(offer.next)
-				if (isToken) {
-					const giveAllowence = await TokenContract.approve(LOLContract.address, ethers.utils.parseEther(getAmount.toString()));
-					await giveAllowence.wait(1)
-				}
-				const makeOffer = await LOLContract.makeOffer(offer.next, productId, ethers.utils.parseEther(getAmount.toString()))
-				await makeOffer.wait(1);
+		const offerID = Date.now() + parseInt(Math.random() * 10000000000000);
+		if (isToken) {
+			const giveAllowence = await TokenContract.approve(LOLContract.address, ethers.utils.parseEther(getAmount.toString()));
+			await giveAllowence.wait(1)
+		}
+		const makeOffer = await LOLContract.makeOffer(offerID, productId, ethers.utils.parseEther(getAmount.toString()))
+		await makeOffer.wait(1);
 
-				const data = fetch('/make-offer', {
-					method: "post",
-					body: JSON.stringify({
-						productID: productId,
-						offerMaker: account,
-						offerAmount: getAmount
-					}),
-					headers: {
-						'Content-type': 'application/json'
-					}
-				}).then((res) => res.json())
-					.then(async (data) => {
-						alert(data.message)
-						loader.style.display = 'none';
-						loader.style.opacity = '0';
-					})
+		const data = fetch('/make-offer', {
+			method: "post",
+			body: JSON.stringify({
+				offerID: offerID,
+				productID: productId,
+				offerMaker: account,
+				offerAmount: getAmount
+			}),
+			headers: {
+				'Content-type': 'application/json'
+			}
+		}).then((res) => res.json())
+			.then(async (data) => {
+				alert(data.message)
+				loader.style.display = 'none';
+				loader.style.opacity = '0';
 			})
 	} catch (err) {
 		console.log(err)
@@ -1157,7 +1153,7 @@ const getUserProduct = async () => {
 													`
 											}
 										} else {
-											offerHTML = `no offers for ${productID}`
+											offerHTML = `no offers for productID ${productID}`
 										}
 										var time = new Date(userProduct.time);
 										var productTime = time.toDateString()
@@ -1247,8 +1243,6 @@ const getOffers = async () => {
 			.then((result) => {
 				if (result.offers.length) {
 					result.offers.forEach(offer => {
-						// console.log(offer)
-						// console.log(offer.product)
 						myOffers.innerHTML = '';
 						fetch('/get-product-by-id', {
 							method: "POST",
@@ -1307,7 +1301,6 @@ const claimOffer = async (offerId, isToken, offerAmount) => {
 			.then(async (data) => {
 				loader.style.display = 'none';
 				loader.style.opacity = '0';
-				console.log(data.product);
 				window.location.reload()
 			})
 	} catch (err) {
@@ -1346,9 +1339,6 @@ if (mintTokenForm !== null) {
 		const tokenAmount = document.getElementById("tokenAmount").value;
 		const MINT_FEES = await TokenContract.getMintFees();
 		const ethValue = tokenAmount * MINT_FEES;
-		console.log(ethValue)
-		console.log(MINT_FEES.toString())
-		// return false;
 		try {
 			const mintToken = await TokenContract.mint(tokenAmount, { value: ethValue })
 			await mintToken.wait(1);
@@ -1363,7 +1353,6 @@ if (mintTokenForm !== null) {
 }
 const sortOffers = async () => {
 	const accordianGroups = document.querySelectorAll('.accordion');
-	// console.log(accordianGroup)
 	accordianGroups.forEach((accordianGroup) => {
 		var indexes = accordianGroup.querySelectorAll("[data-offer]");
 		var indexesArray = Array.from(indexes);

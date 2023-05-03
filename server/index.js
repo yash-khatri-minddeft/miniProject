@@ -40,7 +40,7 @@ app.get('/mint-tokens', (req, res) => {
     res.render(path.join(__dirname, '..', 'views', '/mintTokens'))
 })
 app.post('/add-product', expressjson, async (req, res) => {
-    const {product, name, owner, price, url, description, location, isToken } = req.body;
+    const { product, name, owner, price, url, description, location, isToken } = req.body;
     const new_product = new Products({
         product: product,
         name: name,
@@ -84,8 +84,9 @@ app.post('/get-products', expressjson, async (req, res) => {
     res.json({ product: products })
 })
 app.post('/make-offer', expressjson, (req, res) => {
-    const { productID, offerMaker, offerAmount } = req.body;
+    const { offerID, productID, offerMaker, offerAmount } = req.body;
     const newOffer = new Offers({
+        offer: offerID,
         product: productID,
         offerAmount: offerAmount,
         offerMaker: offerMaker,
@@ -156,13 +157,13 @@ app.get('/reset-counters', (req, res) => {
     res.send('counter reset')
 })
 app.listen(4000, (err) => {
-    mongoose.connect('mongodb+srv://yashkhatri:'+process.env.CLUSTER_PASSWORD+'@cluster0.pz95adm.mongodb.net/miniProject')
-    .catch((err) => {
-        if (err) throw err;
-    })
-    .then(() => {
-        console.log('database connected')
-    })
+    mongoose.connect('mongodb+srv://yashkhatri:' + process.env.CLUSTER_PASSWORD + '@cluster0.pz95adm.mongodb.net/miniProject')
+        .catch((err) => {
+            if (err) throw err;
+        })
+        .then(() => {
+            console.log('database connected')
+        })
     if (err) throw err;
     console.log('server connected')
 })
