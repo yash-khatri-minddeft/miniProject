@@ -1,19 +1,11 @@
 const { mongoose } = require('mongoose');
 require('dotenv').config();
 
-mongoose.connect('mongodb+srv://yashkhatri:'+process.env.CLUSTER_PASSWORD+'@cluster0.pz95adm.mongodb.net/miniProject')
-.catch((err) => {
-	if (err) throw err;
-})
-.then(() => {
-	console.log('database connected')
-})
-const autoIncrement = require('@alec016/mongoose-autoincrement');
-
-autoIncrement.initialize(mongoose.connection)
 const productSchema = new mongoose.Schema({
 	product: {
-		type: String,
+		type: Number,
+		unique: true,
+		required: true
 	},
 	name: {
 		type: String,
@@ -60,7 +52,9 @@ const productSchema = new mongoose.Schema({
 
 const offerSchema = new mongoose.Schema({
 	offer: {
-		type: String
+		type: Number,
+		unique: true,
+		required: true,
 	},
 	product: {
 		type: Number,
@@ -87,9 +81,6 @@ const offerSchema = new mongoose.Schema({
 		required: true
 	}
 })
-
-productSchema.plugin(autoIncrement.plugin, { model: 'products', field: 'product', startAt: 101 });
-offerSchema.plugin(autoIncrement.plugin, { model: 'offers', field: 'offer', startAt: 101 });
 
 const Products = new mongoose.model('products', productSchema);
 const Offers = new mongoose.model('offers', offerSchema);
