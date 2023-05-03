@@ -1,6 +1,14 @@
 const { mongoose, mongo } = require('mongoose');
 const autoIncrement = require('@alec016/mongoose-autoincrement');
+require('dotenv').config();
 
+mongoose.connect('mongodb+srv://yashkhatri:'+process.env.CLUSTER_PASSWORD+'@cluster0.pz95adm.mongodb.net/miniProject')
+.catch((err) => {
+    if (err) throw err;
+})
+.then(() => {
+    console.log('database connected')
+})
 autoIncrement.initialize(mongoose.connection)
 const productSchema = new mongoose.Schema({
 	product: {

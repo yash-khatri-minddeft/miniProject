@@ -8,6 +8,7 @@ const { Products, Offers } = require('./model');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 const fileUpload = require('express-fileupload');
+
 // const { NFTStorage, File } = require('nft.storage')
 // const client = new NFTStorage({ token: process.env.NFT_STORAGE_API })
 
@@ -160,12 +161,5 @@ app.get('/reset-counters', (req, res) => {
 
 app.listen(3000, (err) => {
     if (err) throw err;
-    mongoose.connect('mongodb+srv://yashkhatri:'+process.env.CLUSTER_PASSWORD+'@cluster0.pz95adm.mongodb.net/miniProject')
-        .catch((err) => {
-            if (err) throw err;
-        })
-        .then(() => {
-            console.log('database connected')
-        })
     console.log('server connected')
 })
