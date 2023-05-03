@@ -1,4 +1,5 @@
 const { mongoose } = require('mongoose');
+require('dotenv').config();
 
 mongoose.connect('mongodb+srv://yashkhatri:'+process.env.CLUSTER_PASSWORD+'@cluster0.pz95adm.mongodb.net/miniProject')
 .catch((err) => {
