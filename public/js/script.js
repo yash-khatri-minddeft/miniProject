@@ -993,7 +993,7 @@ const addProducts = async () => {
 				imageData.append('image', image);
 
 				try {
-					const imageResponse = await fetch('http://localhost:3000/upload-image', {
+					const imageResponse = await fetch('https://lolx.onrender.com/upload-image', {
 						method: 'POST',
 						body: imageData,
 					})
@@ -1009,7 +1009,7 @@ const addProducts = async () => {
 								console.log(data.next)
 								const tx = await LOLContract.addProduct(data.next, name, ethers.utils.parseEther(price.toString()), imageIPFSLink, description, location, parseInt(isToken))
 								await tx.wait(1)
-								const response = fetch('http://localhost:3000/add-product', {
+								const response = fetch('https://lolx.onrender.com/add-product', {
 									method: 'post',
 									body: JSON.stringify({
 										name: name,
@@ -1097,7 +1097,7 @@ const getUserProduct = async () => {
 	const userProducts = document.querySelector('.my-products .row');
 	if (userProducts !== null) {
 		if (walletConnected) {
-			fetch('http://localhost:3000/get-user-product', {
+			fetch('https://lolx.onrender.com/get-user-product', {
 				method: 'POST',
 				body: JSON.stringify({
 					owner: account
@@ -1216,7 +1216,7 @@ const acceptOffer = async (offerId) => {
 	try {
 		const acceptOffer = await LOLContract.acceptOffer(offerId);
 		await acceptOffer.wait(1);
-		fetch('http://localhost:3000/accept-offer', {
+		fetch('https://lolx.onrender.com/accept-offer', {
 			method: 'POST',
 			body: JSON.stringify({
 				offerId: offerId
@@ -1240,7 +1240,7 @@ const acceptOffer = async (offerId) => {
 const getOffers = async () => {
 	const myOffers = document.querySelector('.my-offers .row');
 	if (myOffers != null) {
-		fetch('http://localhost:3000/my-offers', {
+		fetch('https://lolx.onrender.com/my-offers', {
 			method: "POST",
 			body: JSON.stringify({
 				account: account
@@ -1255,7 +1255,7 @@ const getOffers = async () => {
 						// console.log(offer)
 						// console.log(offer.product)
 						myOffers.innerHTML = '';
-						fetch('http://localhost:3000/get-product-by-id', {
+						fetch('https://lolx.onrender.com/get-product-by-id', {
 							method: "POST",
 							body: JSON.stringify({
 								productId: offer.product
@@ -1300,7 +1300,7 @@ const claimOffer = async (offerId, isToken, offerAmount) => {
 			const tx = await LOLContract.claimOfferWithEth(offerId, { value: EthAmount })
 			await tx.wait(1);
 		}
-		fetch('http://localhost:3000/claim-offer', {
+		fetch('https://lolx.onrender.com/claim-offer', {
 			method: 'POST',
 			body: JSON.stringify({
 				offerId: offerId
