@@ -996,8 +996,6 @@ const addProducts = async () => {
 						method: 'POST',
 						body: imageData,
 					})
-
-
 					const imageIPFS = await imageResponse.json()
 					const imageIPFSLink = imageIPFS.response;
 					try {
