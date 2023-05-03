@@ -158,14 +158,14 @@ app.get('/reset-counters', (req, res) => {
     })
     res.send('counter reset')
 })
-mongoose.connect('mongodb+srv://yashkhatri:'+process.env.CLUSTER_PASSWORD+'@cluster0.pz95adm.mongodb.net/miniProject')
-.catch((err) => {
-    if (err) throw err;
-})
-.then(() => {
-    console.log('database connected')
-    app.listen(3000, (err) => {
+app.listen(3000, (err) => {
+    mongoose.connect('mongodb+srv://yashkhatri:'+process.env.CLUSTER_PASSWORD+'@cluster0.pz95adm.mongodb.net/miniProject')
+    .catch((err) => {
         if (err) throw err;
-        console.log('server connected')
     })
+    .then(() => {
+        console.log('database connected')
+    })
+    if (err) throw err;
+    console.log('server connected')
 })
