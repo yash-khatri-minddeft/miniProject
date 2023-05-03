@@ -158,7 +158,7 @@ app.get('/reset-counters', (req, res) => {
     })
     res.send('counter reset')
 })
-if (err) throw err;
 app.listen(3000, (err) => {
+    if (err) throw err;
     console.log('server connected')
 })
