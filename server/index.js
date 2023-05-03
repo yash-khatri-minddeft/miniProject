@@ -160,7 +160,7 @@ app.get('/reset-counters', (req, res) => {
 
 app.listen(3000, (err) => {
     if (err) throw err;
-    mongoose.connect('mongodb+srv://yashkhatri:U09vIN3ARHmKuAlF@cluster0.pz95adm.mongodb.net/miniProject')
+    mongoose.connect('mongodb+srv://yashkhatri:'+process.env.CLUSTER_PASSWORD+'@cluster0.pz95adm.mongodb.net/miniProject')
         .catch((err) => {
             if (err) throw err;
         })
