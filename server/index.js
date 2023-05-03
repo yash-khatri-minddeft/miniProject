@@ -155,7 +155,7 @@ app.get('/reset-counters', (req, res) => {
     newoffer.resetCount((err, next) => {
         console.log(next)
     })
-    res.send('counter resetted')
+    res.send('counter reset')
 })
 
 app.listen(3000, (err) => {
