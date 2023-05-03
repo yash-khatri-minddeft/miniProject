@@ -8,21 +8,17 @@ const { Products, Offers } = require('./model');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 const fileUpload = require('express-fileupload');
-
-// const { NFTStorage, File } = require('nft.storage')
-// const client = new NFTStorage({ token: process.env.NFT_STORAGE_API })
-
 const pinataSDK = require('@pinata/sdk');
-const { off } = require('process');
 const pinata = new pinataSDK({ pinataApiKey: process.env.PINATA_API_Key, pinataSecretApiKey: process.env.PINATA_API_Secret });
 
-// const urlencodedParser = bodyParser.urlencoded({ extended: true })
+app.use('/public', express.static(path.join(__dirname, '..', 'public')))
+
+
 const expressjson = express.json();
 app.use(cors({
     origin: '*'
 }))
 // app.use(express.json())
-app.use('/public', express.static(path.join(__dirname, '..', 'public')))
 app.use(fileUpload({
     limits: { fileSize: 50 * 1024 * 1024 },
 }));
@@ -44,8 +40,9 @@ app.get('/mint-tokens', (req, res) => {
     res.render(path.join(__dirname, '..', 'views', '/mintTokens'))
 })
 app.post('/add-product', expressjson, async (req, res) => {
-    const { name, owner, price, url, description, location, isToken } = req.body;
+    const {product, name, owner, price, url, description, location, isToken } = req.body;
     const new_product = new Products({
+        product: product,
         name: name,
         owner: owner,
         price: price,
@@ -158,7 +155,14 @@ app.get('/reset-counters', (req, res) => {
     })
     res.send('counter reset')
 })
-app.listen(3000, (err) => {
+app.listen(4000, (err) => {
+    mongoose.connect('mongodb+srv://yashkhatri:'+process.env.CLUSTER_PASSWORD+'@cluster0.pz95adm.mongodb.net/miniProject')
+    .catch((err) => {
+        if (err) throw err;
+    })
+    .then(() => {
+        console.log('database connected')
+    })
     if (err) throw err;
     console.log('server connected')
 })

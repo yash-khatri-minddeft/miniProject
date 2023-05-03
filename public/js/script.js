@@ -1,5 +1,5 @@
 var provider, signer, account, walletConnected, chainId;
-const CONTRACT_ADDRESS = '0x1325EeF3724D718b893816F14c862dc55d40eDd7';
+const CONTRACT_ADDRESS = '0xa42F2a333B928F5fc4524FB1D3b6afd49736b583';
 const CONTRACT_ABI = [
 	{
 		"inputs": [
@@ -471,7 +471,7 @@ const CONTRACT_ABI = [
 		"type": "function"
 	}
 ];
-const TOKEN_ADDRESS = "0x15D8e5835C356247b82c68D4810474bfb3aac7C6";
+const TOKEN_ADDRESS = "0x44d780fc342eEDC1710F82FBA4BCE46FEb10A4ed";
 const TOKEN_ABI = [
 	{
 		"inputs": [],
@@ -985,7 +985,6 @@ const addProducts = async () => {
 				const price = document.getElementById('price').value;
 				const description = document.getElementById('description').value;
 				const isToken = document.querySelector('input[name="isToken"]:checked').value;
-				console.log(parseInt(isToken))
 				// return false;
 				const location = document.getElementById('location').value;
 
@@ -1002,38 +1001,34 @@ const addProducts = async () => {
 					const imageIPFS = await imageResponse.json()
 					const imageIPFSLink = imageIPFS.response;
 					try {
-						fetch('/get-next-product-count', {
-							method: 'GET'
-						}).then((res) => res.json())
+						const productID = Date.now() + parseInt(Math.random() * 10000000000000);
+						const tx = await LOLContract.addProduct(productID, name, ethers.utils.parseEther(price.toString()), imageIPFSLink, description, location, parseInt(isToken))
+						await tx.wait(1)
+						const response = fetch('/add-product', {
+							method: 'post',
+							body: JSON.stringify({
+								product: productID,
+								name: name,
+								owner: account,
+								price: price,
+								url: imageIPFSLink,
+								description: description,
+								location: location,
+								isToken: isToken
+							}),
+							headers: {
+								'Content-type': 'application/json'
+							}
+						})
+							.then((response) => response.json())
 							.then(async (data) => {
-								console.log(data.next)
-								const tx = await LOLContract.addProduct(data.next, name, ethers.utils.parseEther(price.toString()), imageIPFSLink, description, location, parseInt(isToken))
-								await tx.wait(1)
-								const response = fetch('/add-product', {
-									method: 'post',
-									body: JSON.stringify({
-										name: name,
-										owner: account,
-										price: price,
-										url: imageIPFSLink,
-										description: description,
-										location: location,
-										isToken: isToken
-									}),
-									headers: {
-										'Content-type': 'application/json'
-									}
-								})
-									.then((response) => response.json())
-									.then(async (data) => {
-										alert(data.message)
-										loader.style.display = 'none';
-										loader.style.opacity = '0';
-										addProductForm.reset()
-										var preview = document.getElementById("file-ip-1-preview");
-										preview.setAttribute('src', '');
-										preview.style.display = 'none';
-									})
+								alert(data.message)
+								loader.style.display = 'none';
+								loader.style.opacity = '0';
+								addProductForm.reset()
+								var preview = document.getElementById("file-ip-1-preview");
+								preview.setAttribute('src', '');
+								preview.style.display = 'none';
 							})
 					} catch (err) {
 						alert('there was an error while adding the product')

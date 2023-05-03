@@ -38,6 +38,7 @@ contract LOLX is Ownable {
 	event offerClaimed(uint256 indexed productID, uint256 indexed offerID, address productSeller, address offerMaker, uint256 baseAmount, uint256 offerAmount, string paymentType);
 
 	function addProduct(uint256 productID, string memory _productName, uint256 _productPrice, string memory _productImage,string memory _productDesc, string memory _location, bool _isToken ) public {
+		require(products[productID].productOwner == address(0),"Product already exist with same id");
 		products[productID] = productData(msg.sender, _productName, _productPrice, _productImage, _productDesc, _location, block.timestamp, _isToken);
 
 		emit productAddedd(productID, msg.sender, _productName, _productPrice, _productImage, block.timestamp);
