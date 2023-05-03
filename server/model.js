@@ -1,4 +1,12 @@
 const { mongoose } = require('mongoose');
+
+mongoose.connect('mongodb+srv://yashkhatri:'+process.env.CLUSTER_PASSWORD+'@cluster0.pz95adm.mongodb.net/miniProject')
+.catch((err) => {
+	if (err) throw err;
+})
+.then(() => {
+	console.log('database connected')
+})
 const autoIncrement = require('@alec016/mongoose-autoincrement');
 
 autoIncrement.initialize(mongoose.connection)
