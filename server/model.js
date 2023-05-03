@@ -1,4 +1,4 @@
-const { mongoose, mongo } = require('mongoose');
+const { mongoose } = require('mongoose');
 const autoIncrement = require('@alec016/mongoose-autoincrement');
 require('dotenv').config();
 
