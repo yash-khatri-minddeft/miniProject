@@ -102,7 +102,7 @@ app.post('/make-offer', expressjson, (req, res) => {
 app.post('/get-user-product', expressjson, async (req, res) => {
     const owner = req.body.owner;
 
-    const userProducts = await Products.find({ owner: owner, buyer: 'null' })
+    const userProducts = await Products.find({$or: [{ owner: owner, buyer: 'null' }, { buyer: owner }]})
     res.json({ userProducts: userProducts })
 })
 app.post('/get-offers', expressjson, async (req, res) => {
